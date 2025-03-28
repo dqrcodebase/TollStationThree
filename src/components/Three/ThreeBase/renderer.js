@@ -9,6 +9,8 @@
  */
 import * as THREE from 'three';
 import { CSS3DRenderer } from 'three/addons/renderers/CSS3DRenderer.js';
+import { CSS2DRenderer } from 'three/addons/renderers/CSS2DRenderer.js';
+
 
 
 // width和height用来设置Three.js输出Canvas画布尺寸，同时用来辅助设置相机渲染范围
@@ -33,4 +35,15 @@ css3Renderer.domElement.style.top = '0px';//具体值根据canvas画布位置来
 css3Renderer.domElement.style.pointerEvents = 'none';
 document.body.appendChild(css3Renderer.domElement);
 
-export { renderer ,css3Renderer};
+// 创建一个CSS2渲染器CSS2DRenderer
+const css2Renderer = new CSS2DRenderer();
+css2Renderer.setSize(width, height);
+// HTML标签<div id="tag"></div>外面父元素叠加到canvas画布上且重合
+css2Renderer.domElement.style.position = 'absolute';
+css2Renderer.domElement.style.top = '0px';//具体值根据canvas画布位置来定
+//设置.pointerEvents=none，解决HTML元素标签对threejs canvas画布鼠标事件的遮挡
+css2Renderer.domElement.style.pointerEvents = 'none';
+document.body.appendChild(css2Renderer.domElement);
+
+
+export { renderer ,css3Renderer,css2Renderer};

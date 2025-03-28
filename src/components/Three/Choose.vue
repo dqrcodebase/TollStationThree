@@ -1,21 +1,68 @@
+<!--
+ * @Author: dqr
+ * @Date: 2025-03-26 14:51:56
+ * @LastEditors: D Q R 852601818@qq.com
+ * @LastEditTime: 2025-03-27 10:01:53
+ * @FilePath: /TollStationThree/src/components/Three/Choose.vue
+ * @Description: 
+ * 
+-->
 <script setup>
-import { CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js'
+import { createCameraTween } from './ThreeBase/createTween'
+import {tag} from './messageTag'
+import { raychoose } from './ThreeBase/raychoose'
+import * as THREE from 'three'
+import messageData from './messageData'
 const chooseObj = ref(null)
-const shoufeizhan = ref('')
-const CarNum = ref('')
-const shouName = ref('')
-const shouNameId = ref('')
-const {model} = defineProps(['model'])
+const { model, camera, outlinePass, controls } = defineProps([
+  'model',
+  'camera',
+  'outlinePass',
+  'controls',
+])
+const chooseInfo = ref({
+  shoufeizhan: '收费站',
+  CarNum: '0',
+  shouName: '收费员',
+  shouNameId: '000000',
+})
+let windowBody = []
 onMounted(() => {
-  model.getObjectByName('SF001')
-  const div = document.getElementById('messageTag')
-  const label = new CSS3DObject(div)
-  model.add(label)
+  windowBody = model.getObjectByName('收费窗口').children
+  windowBody.forEach((element) => {
+    element.traverse(function (obj) {
+      obj.windowBody = element
+    })
+  })
   createChoose()
 })
-
+addEventListener('click', function (event) {
+  chooseObj.value = raychoose(event, camera, windowBody)
+  if (!chooseObj.value) {
+    outlinePass.selectedObjects = []
+    return
+  }
+  const name = chooseObj.value.windowBody.name
+  chooseInfo.value = {
+    shoufeizhan: messageData[name].shoufeizhan,
+    CarNum: messageData[name].CarNum,
+    shouName: messageData[name].shouName,
+    order: messageData[name].order,
+    shouNameId: messageData[name].shouNameId,
+  }
+  const dom = tag('messageTag')
+  chooseObj.value.windowBody.add(dom)
+  outlinePass.selectedObjects = [chooseObj.value.windowBody]
+  chooseObj.value.windowBody.inTween.start()
+})
 function createChoose() {
-
+  windowBody.forEach((item) => {
+    const target = new THREE.Vector3()
+    item.getWorldPosition(target)
+    const pos = new THREE.Vector3()
+    pos.set(target.x - 5, target.y + 3, target.z + 10)
+    createCameraTween(item, camera, controls, pos, target)
+  })
 }
 </script>
 <template>
@@ -53,7 +100,7 @@ function createChoose() {
             font-size: 16px;
           "
         >
-          {{ shoufeizhan }}
+          {{ chooseInfo.shoufeizhan }}
         </div>
 
         <!-- 当天已经通车的次数 -->
@@ -67,18 +114,18 @@ function createChoose() {
             vertical-align: middle;
           "
         >
-          <span id="CarNum">{{ CarNum }}</span
+          <span id="CarNum">{{ chooseInfo.CarNum }}</span
           ><span style="font-size: 14px"> 车次 </span>
         </div>
         <div
           style="position: absolute; left: 85px; top: 163px; padding: 8px 25px"
         >
-          <span id="shouName">{{ shouName }}</span>
+          <span id="shouName">{{ chooseInfo.shouName }}</span>
         </div>
         <div
           style="position: absolute; left: 200px; top: 165px; padding: 8px 25px"
         >
-          工号：<span id="shouNameId">{{ shouNameId }}</span>
+          工号：<span id="shouNameId">{{ chooseInfo.shouNameId }}</span>
         </div>
       </div>
     </div>

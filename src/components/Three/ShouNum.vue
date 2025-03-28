@@ -2,8 +2,8 @@
  * @Author: dqr
  * @Date: 2025-03-26 10:56:07
  * @LastEditors: D Q R 852601818@qq.com
- * @LastEditTime: 2025-03-26 14:20:41
- * @FilePath: /收费站-three/src/components/Three/ShouNum.vue
+ * @LastEditTime: 2025-03-27 14:04:06
+ * @FilePath: /TollStationThree/src/components/Three/ShouNum.vue
  * @Description: 
  * 
 -->

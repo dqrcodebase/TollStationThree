@@ -2,8 +2,8 @@
  * @Author: dqr
  * @Date: 2025-03-24 15:18:38
  * @LastEditors: D Q R 852601818@qq.com
- * @LastEditTime: 2025-03-26 14:35:02
- * @FilePath: /收费站-three/src/components/Three/Control.vue
+ * @LastEditTime: 2025-03-27 10:05:20
+ * @FilePath: /TollStationThree/src/components/Three/Control.vue
  * @Description: 
  * 
 -->
@@ -35,7 +35,7 @@ function createSwitch() {
   for (let i = 0; i < boolNum; i++) {
     const gz = model.getObjectByName('GZ00' + (i + 1))
     const sprite = CreatePointsTag()
-    sprite.position.x = 2
+    sprite.position.x = 3
     sprite.position.z = 1
     sprite.i = i
     gz.add(sprite)
